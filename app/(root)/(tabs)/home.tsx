@@ -4,7 +4,7 @@ import RideCard from "@/components/RideCard";
 import { icons, images } from "@/constants";
 import { useLocationStore } from "@/store";
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -23,28 +23,26 @@ export default function Page() {
   const [hasPermissions, setHasPermissions] = useState(false);
 
   useEffect(() => {
-    const requestLocation = async () => {
-      let { status } = await Location.requestBackgroundPermissionsAsync();
-
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setHasPermissions(false);
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync();
+      let location = await Location.getCurrentPositionAsync({});
+
       const address = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude!,
-        longitude: location.coords.longitude!,
+        latitude: location.coords?.latitude!,
+        longitude: location.coords?.longitude!,
       });
 
       setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        address: `${address[0].name},${address[0].region}`,
+        latitude: location.coords?.latitude,
+        longitude: location.coords?.longitude,
+        address: `${address[0].name}, ${address[0].region}`,
       });
-    };
-
-    requestLocation();
+    })();
   }, []);
 
   const loading = true;
@@ -157,7 +155,14 @@ export default function Page() {
 
   const handleSignOut = async () => {};
 
-  const handleDestinationPress = async () => {};
+  const handleDestinationPress = async (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => {
+    setDestinationLocation(location);
+    router.push("/(root)/find-ride");
+  };
 
   return (
     <SafeAreaView className="bg-general-500">
