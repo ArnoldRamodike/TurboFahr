@@ -1,10 +1,28 @@
-import { View, Text, Image } from "react-native";
-import React from "react";
+import { View, Text, Image, Alert } from "react-native";
+import React, { useCallback } from "react";
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
+import { useOAuth } from "@clerk/clerk-expo";
+import { googleOAuth } from "@/lib/auth";
+import { router } from "expo-router";
 
 const OAuth = () => {
-  const gandleGoogleSignIn = async () => {};
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+
+  const handleGoogleSignIn = useCallback(async () => {
+    try {
+      const result = await googleOAuth(startOAuthFlow);
+
+      if (result.code === "session_exists") {
+        Alert.alert("Success", "Session exists. Redidcreting to home page");
+        router.push("/(root)/(tabs)/home");
+      }
+
+      Alert.alert(result.success ? "Success" : "Error", result.message);
+    } catch (err) {
+      console.error("OAuth error", err);
+    }
+  }, []);
   return (
     <View>
       <View className="flex flex-row justify-center items-center mt-4 gap-x-3">
@@ -26,7 +44,7 @@ const OAuth = () => {
         )}
         bgVariant="outline"
         textVariant="primary"
-        onPress={gandleGoogleSignIn}
+        onPress={handleGoogleSignIn}
       />
     </View>
   );
