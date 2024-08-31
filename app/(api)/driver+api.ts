@@ -4,8 +4,6 @@ export async function GET(){
     try {
     const sql =  neon(`${process.env.DATABASE_URL}`);
    
-    console.log("SQL: ", sql);
-    
     const drivers =  await sql`SELECT * FROM drivers`;
 
 
