@@ -13,14 +13,12 @@ const OAuth = () => {
     try {
       const result = await googleOAuth(startOAuthFlow);
 
-      if (result.code === "session_exists") {
-        Alert.alert("Success", "Session exists. Redidcreting to home page");
+      if (result.code === "session_exists" || result.code === "success") {
         router.push("/(root)/(tabs)/home");
       }
-
-      Alert.alert(result.success ? "Success" : "Error", result.message);
     } catch (err) {
       console.error("OAuth error", err);
+      Alert.alert("Error", "Error occured");
     }
   }, []);
   return (
