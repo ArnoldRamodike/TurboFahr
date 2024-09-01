@@ -53,17 +53,7 @@ const Rides = () => {
         )}
         ListHeaderComponent={() => (
           <>
-            <Text className="text-2xl font-JakartaBold mt-5 mb-3">
-              All My Rides
-            </Text>
-            {/* <>
-              <Text className="text-xl font-JakartaBold mt-5 mb-3">
-                Your current location
-              </Text>
-              <View className="flex flex-row items-center bg-transparent h-[300px]">
-                <Map />
-              </View>
-            </> */}
+            <Text className="text-2xl font-JakartaBold my-5">All My Rides</Text>
           </>
         )}
       />
